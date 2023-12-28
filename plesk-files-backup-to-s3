@@ -1,0 +1,39 @@
+#!/bin/bash
+set  -x
+# Set the source folder, S3 bucket name, and list of folders to ignore
+source_folder="/var/www/vhosts/{{remplazar con el workspace}}"
+
+s3_bucket="-plesk-files-bkup"
+ignore_folders=("git.fastandstatic.com" "sqlbackups" "error_docs" "ssl" "logs" "wordpress-backups" )
+
+# Loop through each subfolder in the source folder
+for folder in "$source_folder"/*; do
+  if [ -d "$folder" ]; then
+    # Get the folder name without the path
+    folder_name=$(basename "$folder")
+
+    # Check if the folder should be ignored
+    if [[ " ${ignore_folders[@]} " =~ " $folder_name " ]]; then
+      echo "Skipping $folder_name"
+      continue
+    fi
+
+    echo "Processing folder: $folder_name"  # Add this line to echo the folder name
+
+    # Create a ZIP file for the folder
+    zip_file="$folder_name.zip"
+    zip -r "$zip_file" "$folder"
+
+    echo "Uploading $zip_file to S3 bucket"
+    # Upload the ZIP file to S3
+    aws s3 cp "$zip_file" "s3://$s3_bucket/$zip_file"
+
+    echo "Deleting $zip_file"
+    # Delete the ZIP file
+    rm "$zip_file"
+
+    echo "Processed and uploaded $folder_name"
+  fi
+done
+
+echo "All folders processed"
