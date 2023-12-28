@@ -7,4 +7,6 @@ Estos scripts solo funcionan en plesk.
 6. crear la carpeta mkdir /var/www/vhosts/sqlbackups/
 7. Modificar los scripts para que contengan el bucket y demas configuraciones correctas
 8. correr el script y validar su funcionamiento
-9. Crear tarea que ejecute los scripts en plesk. 
+9. Crear tarea que ejecute los scripts en plesk
+      comando:  sudo /home/ubuntu/databases-to-s3.sh
+      system user = ubnuntu
