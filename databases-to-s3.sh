@@ -26,7 +26,7 @@ for dbname in $databases; do
 
    # Sync the backup to AWS S3
    echo "Syncing backup to AWS S3..."
-   aws s3 cp /var/www/vhosts/sqlbackups/$dbname-$completedate.sql s3://$s3_bucket/
+   aws s3 cp /var/www/vhosts/sqlbackups/$dbname-$completedate.sql s3://$s3_bucket/sqlbackups/$dbname/
 
    # Log the S3 sync status
    echo "Sync to AWS S3 completed"
